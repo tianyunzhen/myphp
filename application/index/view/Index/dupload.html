@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<link rel="stylesheet" href="/lib/jquery-upload/css/jquery.fileupload.css">
+		<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script src="/lib/jquery-upload/js/jquery.fileupload.js"></script>
+
+		<a id="zwb_upload"><input type="file" class="add" multiple>点击上传文件</a>
+		<input type="text" name="file" id="callbackPath2">
+
+		<script>
+			//配置需要引入jq 1.7.2版本以上
+			//服务器端成功返回 {state:1,path:文件保存路径}
+			//服务器端失败返回 {state:0,errmsg:错误原因}
+			//默认做了文件名不能含有中文,后端接收文件的变量名为file
+			$("#zwb_upload").bindUpload({
+				url: "{:url('index/upload')}", //上传服务器地址
+				callbackPath: "#callbackPath2", //绑定上传成功后 图片地址的保存容器的id或者class 必须为input或者textarea等可以使用$(..).val()设置之的表单元素
+				num: 10, //上传数量的限制 默认为空 无限制
+				type: "jpg|png|gif|svg", //上传文件类型 默认为空 无限制
+				size: 3, //上传文件大小的限制,默认为5单位默认为mb
+			});
+		</script>
+	</body>
+
+</html>

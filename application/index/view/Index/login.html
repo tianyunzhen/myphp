@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="/lib/verify-master/css/verify.css">
+	</head>
+
+	<body>
+		<form action="/index/index/check" method="post" id="form_add">
+			<input type="text" name="username" />
+			<input type="text" name="password" />
+			<div id="mpanel6" style="margin-top:50px;"></div>
+			<!--<input type="text" name="code" /><img src="{:captcha_src()}" onclick="this.src=this.src"/>-->
+			<input type="button" onclick="fsubmit()" value="提交" />
+		</form>
+		<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script type="text/javascript" src="/lib/verify-master/js/verify.js"></script>
+		<script>
+			var code = "";
+			$('#mpanel6').pointsVerify({
+				defaultNum: 4, //默认的文字数量
+				checkNum: 4, //校对的文字数量
+				vSpace: 5, //间隔
+				imgName: ['1.jpg', '2.jpg', '3.jpg'],
+				imgSize: {
+					width: '600px',
+					height: '200px',
+				},
+				barSize: {
+					width: '600px',
+					height: '40px',
+				},
+				ready: function() {},
+				success: function() {
+					code = "sjsij21jasdnc01"
+				},
+				error: function() {
+
+				}
+			});
+
+			function fsubmit() {
+				
+				if(code == "sjsij21jasdnc01") {
+					var data = new FormData($('#form_add')[0]);
+					$.ajax({
+						url: '/index/index/check',
+						type: 'POST',
+						data: data,
+						dataType: 'JSON',
+						cache: false,
+						processData: false,
+						contentType: false
+					}).done(function(res) {
+						if(res.msg=="success"){
+							$(location).attr("href","/index/index/index/")
+						}else{
+							location.replace(location.href);
+						}
+					});
+				} else {
+
+				}
+			}
+		</script>
+	</body>
+
+</html>

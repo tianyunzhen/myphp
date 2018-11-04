@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<input type="file" id="myfile" onchange="uploadImage();" />
+		<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script>
+			function uploadImage() {
+				var formdata = new FormData();
+				// 将文件追加到 formdata对象中。
+				formdata.append("myfile", document.getElementById('myfile').files[0]);
+				$.ajax({
+					type: "POST",
+					url: "/index/index/doUpload",
+					data: formdata,
+					/**
+					 * 必须false才会避开jQuery对 formdata 的默认处理
+					 * XMLHttpRequest会对 formdata 进行正确的处理
+					 */
+					processData: false,
+					// 告诉jQuery不要去设置Content-Type请求头
+					contentType: false,
+					dataType: "json",
+					success: function(data) {
+						console.log(data);
+					},
+					error: function(jqXHR) {
+						alert("发生错误：" + jqXHR.status);
+					},
+				});
+
+			}
+		</script>
+	</body>
+
+</html>

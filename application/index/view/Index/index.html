@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>hello world</title>
+	</head>
+
+	<body>
+		<div class="container">
+
+		</div>
+		<div id="Pagination"></div>
+		<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
+		<script>
+			$(function() {
+
+				function getData(page) {
+					$.ajax({
+						type: 'POST',
+						url: '/index/index/show',
+						data: {
+							'pageNum': page - 1
+						},
+						dataType: 'json',
+						beforeSend: function() {
+							//$("body").mLoading();
+						},
+						success: function(json) {
+
+							$(".container").empty(); //清空数据区
+							total = json.total; //总记录数
+							pageSize = json.pageSize; //每页显示条数
+							curPage = page; //当前页
+							totalPage = json.totalPage; //总页数
+							var li = "";
+							var list = json.list;
+
+							$.each(list, function(index, array) { //遍历json数据列
+								li += "<span>" + array['username'] + "</span><span>" + array['password'] + "</span><br>";
+							});
+							$(".container").append(li);
+
+						},
+						complete: function() { //生成分页条
+							getPageBar();
+							//$("body").mLoading("hide");
+
+							$("#Pagination span a").on('click', function() {
+								var rel = $(this).attr("rel");
+								if(rel) {
+									getData(rel);
+								}
+							});
+						},
+						error: function() {
+							//alert("数据加载失败");
+						}
+					});
+				}
+
+				function getPageBar() {
+					//页码大于最大页数
+					if(curPage > totalPage) curPage = totalPage;
+					//页码小于1
+					if(curPage < 1) curPage = 1;
+					pageStr = "<span>共" + total + "条</span><span>" + curPage +
+						"/" + totalPage + "</span>";
+
+					//如果是第一页
+					if(curPage == 1) {
+						pageStr += "<span>首页</span><span>上一页</span>";
+					} else {
+						pageStr += "<span><a href='javascript:void(0)' rel='1'>首页</a></span> <span> <a href = 'javascript:void(0)' rel = '" + (curPage - 1) + "' > 上一页 </a></span> ";
+					}
+					
+					if(curPage != 1&&curPage < totalPage) {
+						pageStr += "<span><a href = 'javascript:void(0)' rel = '" + (curPage - 1) + "' >"+(curPage-1)+"</a></span><span><a href = 'javascript:void(0)' rel = '" + curPage+ "' >"+curPage+"</a></span><span><a href = 'javascript:void(0)' rel = '" + (parseInt(curPage) + 1) + "' >"+(parseInt(curPage) + 1)+"</a></span>";
+						
+					}else if(curPage >= totalPage) {
+						pageStr += "<span><a href = 'javascript:void(0)' rel = '" + (curPage - 2) + "' >"+(curPage-2)+"</a></span><span><a href = 'javascript:void(0)' rel = '" + (curPage - 1) + "' >"+(curPage-1)+"</a></span><span><a href = 'javascript:void(0)' rel = '" + curPage + "' >"+curPage+"</a></span>";
+						
+					}else if(curPage == 1) {
+						pageStr += "<span><a href = 'javascript:void(0)' rel = '" + curPage + "' >"+curPage+"</a></span><span><a href = 'javascript:void(0)' rel = '" + (parseInt(curPage) + 1) + "' >"+(parseInt(curPage) + 1)+"</a></span><span><a href = 'javascript:void(0)' rel = '" + (parseInt(curPage) + 2) + "' >"+(parseInt(curPage) + 2)+"</a></span>";
+						
+					}else{
+						
+					}
+
+					//如果是最后页
+					if(curPage >= totalPage) {
+						pageStr += "<span>下一页</span><span>尾页</span>";
+					} else {
+						pageStr += "<span><a href='javascript:void(0)' rel='" + (parseInt(curPage) + 1) + "'>下一页 </a></span> <span> <a href = 'javascript:void(0)' rel = '" + totalPage + "'> 尾页 </a> </span> ";
+					}
+
+					$("#Pagination").html(pageStr);
+				}
+
+				getData(1);
+
+			});
+		</script>
+	</body>
+
+</html>
